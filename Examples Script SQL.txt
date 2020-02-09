@@ -1,0 +1,50 @@
+Some sample scripts in SQL. I invite others to add my ideas :)
+
+
+Summation script for teams in the League:
+	SELECT  DISTINCT a.team_id as Numer_Drużyny, COUNT(*) as liczba_detekcji
+	 FROM    detections a
+		WHERE  (datetime(a.timestamp/1000,'unixepoch')> "2020-01-12 21:00:00" 
+	 AND 
+                datetime(a.timestamp/1000,'unixepoch')< "2020-01-13 9:00:00" )
+	 GROUP BY team_id;
+
+
+The script displays all detections for user ID 21362:
+
+
+	select datetime(timestamp/1000,"unixepoch") as data from detections
+	where user_id=21362
+
+
+The script displays all detections for device ID 1312 with the condition of detection coordinates:
+
+
+	select device_id,datetime(timestamp/1000,'unixepoch'),x,y
+	 from detections where   (device_id=1312) 
+
+
+
+The script displays all detections with the condition of time interval and detection coordinates:
+
+	select team_id, device_id,datetime(timestamp/1000,'unixepoch') AS DATAK   
+	from detections p 
+	where   
+		(datetime(timestamp/1000,'unixepoch')> "2020-01-12 21:00:00" 
+	AND 
+		datetime(timestamp/1000,'unixepoch')< "2020-01-13 9:00:00" )  
+	AND     (x<100 and y<100) or    ( x>width-100 and y> height-100)
+
+
+A script that searches for detections at the same times: duplicates, triplets etc.
+
+
+	SELECT datetime(a.timestamp /1000,"unixepoch"),a.device_id,b.device_id,a.frame_content
+	FROM detections a
+	JOIN (SELECT  device_id,  timestamp, COUNT(*)
+	FROM detections 
+	GROUP BY  (timestamp ),  device_id 
+	HAVING count(*) > 1) b
+	ON 
+	( (a.timestamp)  =  (b.timestamp )) 
+	ORDER BY  a.timestamp 

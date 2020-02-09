@@ -1,0 +1,48 @@
+Kilka przykładowych skryptów w SQL . Zapraszam innych do dopisywania swoich pomysłów :)
+
+
+Skrypt sumowania dla drużyn w Lidze :
+
+	SELECT  DISTINCT a.team_id as Numer_Drużyny, COUNT(*) as liczba_detekcji
+	 FROM    detections a
+		WHERE  (datetime(a.timestamp/1000,'unixepoch')> "2020-01-12 21:00:00" 
+	 AND 
+                datetime(a.timestamp/1000,'unixepoch')< "2020-01-13 9:00:00" )
+	 GROUP BY team_id;
+
+
+Skrypt wyświetla wszystkie detekcje dla usera o ID 21362:
+
+	select datetime(timestamp/1000,"unixepoch") as data from detections
+	where user_id=21362
+
+
+Skrypt wyświetla wszystkie detekcje dla urządzebia o ID 1312 z warunkiem współrzędnych detekcji :
+
+	select device_id,datetime(timestamp/1000,'unixepoch'),x,y
+	 from detections where   (device_id=1312) 
+
+
+
+Skrypt wyświetla wszystkie detekcje  z warunkiem przedziału czasu i współrzędnych detekcji :
+
+	select team_id, device_id,datetime(timestamp/1000,'unixepoch') AS DATAK   
+	from detections p 
+	where   
+		(datetime(timestamp/1000,'unixepoch')> "2020-01-12 21:00:00" 
+	AND 
+		datetime(timestamp/1000,'unixepoch')< "2020-01-13 9:00:00" )  
+	AND     (x<100 and y<100) or    ( x>width-100 and y> height-100)
+
+
+Skrypt wyszukujący detekcje o tych samych czasach : duplikatów, tripletów itd....
+
+	SELECT datetime(a.timestamp /1000,"unixepoch"),a.device_id,b.device_id,a.frame_content
+	FROM detections a
+	JOIN (SELECT  device_id,  timestamp, COUNT(*)
+	FROM detections 
+	GROUP BY  (timestamp ),  device_id 
+	HAVING count(*) > 1) b
+	ON 
+	( (a.timestamp)  =  (b.timestamp )) 
+	ORDER BY  a.timestamp 
