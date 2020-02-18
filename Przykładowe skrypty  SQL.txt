@@ -7,7 +7,7 @@ Skrypt sumowania dla drużyn w Lidze :
 	 FROM    detections a
 		WHERE  (datetime(a.timestamp/1000,'unixepoch')> "2020-01-12 21:00:00" 
 	 AND 
-                datetime(a.timestamp/1000,'unixepoch')< "2020-01-13 9:00:00" )
+                datetime(a.timestamp/1000,'unixepoch')< "2020-01-13 07:00:00" )
 	 GROUP BY team_id;
 
 
@@ -31,7 +31,7 @@ Skrypt wyświetla wszystkie detekcje  z warunkiem przedziału czasu i współrz�
 	where   
 		(datetime(timestamp/1000,'unixepoch')> "2020-01-12 21:00:00" 
 	AND 
-		datetime(timestamp/1000,'unixepoch')< "2020-01-13 9:00:00" )  
+		datetime(timestamp/1000,'unixepoch')< "2020-01-13 07:00:00" )  
 	AND     (x<100 and y<100) or    ( x>width-100 and y> height-100)
 
 
